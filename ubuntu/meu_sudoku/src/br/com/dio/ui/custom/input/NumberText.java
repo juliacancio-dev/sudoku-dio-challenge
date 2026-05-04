@@ -29,6 +29,8 @@ public class NumberText extends JTextField implements EventListener {
         this.setEnabled(!space.isFixed());
         if (space.isFixed()){
             this.setText(space.getActual().toString());
+            this.setFont(new Font("Arial", Font.BOLD, 20));
+            this.setForeground(new java.awt.Color(0, 100, 0));
         }
         this.getDocument().addDocumentListener(new DocumentListener() {
 
