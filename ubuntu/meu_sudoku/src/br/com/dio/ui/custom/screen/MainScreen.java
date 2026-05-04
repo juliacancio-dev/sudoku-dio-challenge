@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.List;
 import java.util.Map;
 
 import static br.com.dio.service.EventEnum.CLEAR_SPACE;
@@ -33,6 +34,7 @@ public class MainScreen {
 
     private final BoardService boardService;
     private final NotifierService notifierService;
+    private final List<SudokuSector> sectors = new ArrayList<>();
 
     private JButton checkGameStatusButton;
     private JButton finishGameButton;
@@ -46,12 +48,14 @@ public class MainScreen {
     public void buildMainScreen(){
         JPanel mainPanel = new MainPanel(dimension);
         JFrame mainFrame = new MainFrame(dimension, mainPanel);
+        sectors.clear();
         for (int r = 0; r < 9; r+=3) {
             var endRow = r + 2;
             for (int c = 0; c < 9; c+=3) {
                 var endCol = c + 2;
                 var spaces = getSpacesFromSector(boardService.getSpaces(), c, endCol, r, endRow);
-                JPanel sector = generateSection(spaces);
+                SudokuSector sector = (SudokuSector) generateSection(spaces);
+                sectors.add(sector);
                 mainPanel.add(sector);
             }
         }
@@ -74,10 +78,25 @@ public class MainScreen {
         return spaceSector;
     }
 
-    private JPanel generateSection(final List<Space> spaces){
+    private SudokuSector generateSection(final List<Space> spaces){
         List<NumberText> fields = new ArrayList<>(spaces.stream().map(NumberText::new).toList());
         fields.forEach(t -> notifierService.subscribe(CLEAR_SPACE, t));
         return new SudokuSector(fields);
+    }
+
+    private List<NumberText> getAllNumberTextFields() {
+        List<NumberText> allFields = new ArrayList<>();
+        for (int r = 0; r < 9; r+=3) {
+            var endRow = r + 2;
+            for (int c = 0; c < 9; c+=3) {
+                var endCol = c + 2;
+                var spaces = getSpacesFromSector(boardService.getSpaces(), c, endCol, r, endRow);
+                for (Space space : spaces) {
+                    allFields.add(new NumberText(space));
+                }
+            }
+        }
+        return allFields;
     }
 
     private void addFinishGameButton(final JPanel mainPanel) {

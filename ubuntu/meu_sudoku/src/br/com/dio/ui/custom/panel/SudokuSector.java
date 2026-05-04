@@ -11,7 +11,10 @@ import static java.awt.Color.black;
 
 public class SudokuSector extends JPanel {
 
+    private final List<NumberText> textFields;
+
     public SudokuSector(final List<NumberText> textFields){
+        this.textFields = textFields;
         var dimension = new Dimension(170, 170);
         this.setSize(dimension);
         this.setPreferredSize(dimension);
@@ -19,5 +22,10 @@ public class SudokuSector extends JPanel {
         this.setVisible(true);
         textFields.forEach(this::add);
     }
+
+    public List<NumberText> getTextFields() {
+        return textFields;
+    }
+}
 
 }
