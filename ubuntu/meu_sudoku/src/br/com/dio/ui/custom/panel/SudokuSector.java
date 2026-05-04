@@ -28,4 +28,4 @@ public class SudokuSector extends JPanel {
     }
 }
 
-}
+
