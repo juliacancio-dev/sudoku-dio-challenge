@@ -67,7 +67,7 @@ public class Main {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 if (puzzle[i][j] != 0) {
-                    config.put(String.format("%d,%d", i, j), String.format("%d,true", puzzle[i][j]));
+                    config.put(String.format("%d,%d", j, i), String.format("%d,true", puzzle[i][j]));
                 }
             }
         }
@@ -90,7 +90,7 @@ public class Main {
                 }
                 var expected = Integer.parseInt(positionConfig.split(",")[0]);
                 var fixed = Boolean.parseBoolean(positionConfig.split(",")[1]);
-                var currentSpace = new Space(expected, fixed);
+                var currentSpace = new Space(expected, fixed, j, i);
                 spaces.get(i).add(currentSpace);
             }
         }

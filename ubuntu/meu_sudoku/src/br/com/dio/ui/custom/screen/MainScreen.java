@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.List;
 import java.util.Map;
 
 import static br.com.dio.service.EventEnum.CLEAR_SPACE;
@@ -50,11 +49,16 @@ public class MainScreen {
         JFrame mainFrame = new MainFrame(dimension, mainPanel);
         sectors.clear();
         for (int r = 0; r < 9; r+=3) {
-            var endRow = r + 2;
             for (int c = 0; c < 9; c+=3) {
-                var endCol = c + 2;
-                var spaces = getSpacesFromSector(boardService.getSpaces(), c, endCol, r, endRow);
-                SudokuSector sector = (SudokuSector) generateSection(spaces);
+                List<NumberText> fields = new ArrayList<>();
+                for (int row = r; row <= r+2; row++) {
+                    for (int col = c; col <= c+2; col++) {
+                        Space space = boardService.getSpaces().get(col).get(row);
+                        fields.add(new NumberText(space, boardService, row, col));
+                    }
+                }
+                fields.forEach(t -> notifierService.subscribe(CLEAR_SPACE, t));
+                SudokuSector sector = new SudokuSector(fields);
                 sectors.add(sector);
                 mainPanel.add(sector);
             }
@@ -64,39 +68,6 @@ public class MainScreen {
         addFinishGameButton(mainPanel);
         mainFrame.revalidate();
         mainFrame.repaint();
-    }
-
-    private List<Space> getSpacesFromSector(final List<List<Space>> spaces,
-                                            final int initCol, final int endCol,
-                                            final int initRow, final int endRow){
-        List<Space> spaceSector = new ArrayList<>();
-        for (int r = initRow; r <= endRow; r++) {
-            for (int c = initCol; c <= endCol; c++) {
-                spaceSector.add(spaces.get(c).get(r));
-            }
-        }
-        return spaceSector;
-    }
-
-    private SudokuSector generateSection(final List<Space> spaces){
-        List<NumberText> fields = new ArrayList<>(spaces.stream().map(NumberText::new).toList());
-        fields.forEach(t -> notifierService.subscribe(CLEAR_SPACE, t));
-        return new SudokuSector(fields);
-    }
-
-    private List<NumberText> getAllNumberTextFields() {
-        List<NumberText> allFields = new ArrayList<>();
-        for (int r = 0; r < 9; r+=3) {
-            var endRow = r + 2;
-            for (int c = 0; c < 9; c+=3) {
-                var endCol = c + 2;
-                var spaces = getSpacesFromSector(boardService.getSpaces(), c, endCol, r, endRow);
-                for (Space space : spaces) {
-                    allFields.add(new NumberText(space));
-                }
-            }
-        }
-        return allFields;
     }
 
     private void addFinishGameButton(final JPanel mainPanel) {

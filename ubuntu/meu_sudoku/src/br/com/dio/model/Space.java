@@ -5,14 +5,25 @@ public class Space {
     private Integer actual;
     private final int expected;
     private final boolean fixed;
+    private final int row;
+    private final int col;
 
-
-    public Space(final int expected, final boolean fixed) {
+    public Space(final int expected, final boolean fixed, final int row, final int col) {
         this.expected = expected;
         this.fixed = fixed;
+        this.row = row;
+        this.col = col;
         if (fixed){
             actual = expected;
         }
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 
     public Integer getActual() {

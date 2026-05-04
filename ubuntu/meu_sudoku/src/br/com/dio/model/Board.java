@@ -1,5 +1,6 @@
 package br.com.dio.model;
 
+import br.com.dio.util.SudokuValidator;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,6 +35,12 @@ public class Board {
             return false;
         }
 
+        // Verificar violações das regras do Sudoku (duplicatas em linhas, colunas, blocos)
+        if (!SudokuValidator.isValid(this)) {
+            return true;
+        }
+
+        // Verificar se algum valor preenchido não corresponde à solução esperada
         return spaces.stream().flatMap(Collection::stream)
                 .anyMatch(s -> nonNull(s.getActual()) && !s.getActual().equals(s.getExpected()));
     }
@@ -41,6 +48,11 @@ public class Board {
     public boolean changeValue(final int col, final int row, final int value){
         var space = spaces.get(col).get(row);
         if (space.isFixed()){
+            return false;
+        }
+
+        // Verificar se o valor causa conflito com as regras do Sudoku
+        if (SudokuValidator.hasConflicts(this, row, col, value)) {
             return false;
         }
 

@@ -1,8 +1,11 @@
 package br.com.dio.ui.custom.input;
 
 import br.com.dio.model.Space;
+import br.com.dio.service.BoardService;
 import br.com.dio.service.EventEnum;
 import br.com.dio.service.EventListener;
+import br.com.dio.service.NotifierService;
+import br.com.dio.util.SudokuValidator;
 
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -27,10 +30,16 @@ public class NumberText extends JTextField implements EventListener {
     private static final Color COLOR_NORMAL = Color.WHITE;
 
     private final Space space;
+    private final BoardService boardService;
+    private final int row;
+    private final int col;
     private boolean hasError = false;
 
-    public NumberText(final Space space) {
+    public NumberText(final Space space, final BoardService boardService, final int row, final int col) {
         this.space = space;
+        this.boardService = boardService;
+        this.row = row;
+        this.col = col;
         allInstances.add(this);
         Dimension dimension = new Dimension(50, 50);
         this.setSize(dimension);
@@ -58,13 +67,26 @@ public class NumberText extends JTextField implements EventListener {
             public void removeUpdate(final DocumentEvent e) { changeSpace(); }
             public void changedUpdate(final DocumentEvent e) { changeSpace(); }
             private void changeSpace(){
-                if (getText().isEmpty()){
-                    space.clearSpace();
+                String text = getText();
+                if (text.isEmpty()){
+                    boardService.clearCell(row, col);
                     clearErrorHighlight();
+                    refreshAllErrors(boardService.getBoard());
                     return;
                 }
-                space.setActual(Integer.parseInt(getText()));
-                clearErrorHighlight();
+                int value = Integer.parseInt(text);
+                Integer oldValue = space.getActual();
+                boolean success = boardService.setCellValue(row, col, value);
+                if (success) {
+                    clearErrorHighlight();
+                } else {
+                    // Reverter para valor anterior
+                    setText(oldValue != null ? oldValue.toString() : "");
+                }
+                refreshAllErrors(boardService.getBoard());
+                if (!success) {
+                    setErrorState(true);
+                }
             }
         });
     }
@@ -123,5 +145,25 @@ public class NumberText extends JTextField implements EventListener {
 
     public static void clearAllHighlightsStatic() {
         clearAllHighlights();
+    }
+
+    public static void refreshAllErrors(BoardService boardService) {
+        refreshAllErrors(boardService.getBoard());
+    }
+
+    public static void refreshAllErrors(br.com.dio.model.Board board) {
+        for (NumberText nt : allInstances) {
+            if (nt.space.isFixed()) {
+                nt.setErrorState(false);
+                continue;
+            }
+            Integer val = nt.space.getActual();
+            if (val != null) {
+                boolean conflict = SudokuValidator.hasConflicts(board, nt.row, nt.col, val);
+                nt.setErrorState(conflict);
+            } else {
+                nt.setErrorState(false);
+            }
+        }
     }
 }
