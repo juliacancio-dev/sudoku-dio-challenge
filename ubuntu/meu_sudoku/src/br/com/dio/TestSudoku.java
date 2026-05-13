@@ -1,4 +1,4 @@
-﻿package br.com.dio;
+package br.com.dio;
 
 import br.com.dio.util.SudokuGenerator;
 import java.lang.reflect.Method;
@@ -40,7 +40,8 @@ public class TestSudoku {
         int solutions = (Integer) method.invoke(generator, (Object) copy);
 
         boolean valid = (solutions == 1);
-        System.out.println("\nNumber of solutions: " + solutions);
+        System.out.println();
+        System.out.println("Number of solutions: " + solutions);
         System.out.println("Puzzle is " + (valid ? "VALID (unique solution)" : "INVALID (not a unique solution)"));
     }
 }
