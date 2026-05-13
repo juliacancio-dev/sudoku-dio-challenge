@@ -11,11 +11,14 @@ import java.util.Map;
 public class BoardService {
 
     private final static int BOARD_LIMIT = 9;
+    private static final int MAX_LIVES = 3;
 
     private final Board board;
+    private int lives;
 
     public BoardService(final Map<String, String> gameConfig) {
         this.board = new Board(initBoard(gameConfig));
+        this.lives = MAX_LIVES;
     }
 
     public List<List<Space>> getSpaces(){
@@ -28,6 +31,7 @@ public class BoardService {
 
     public void reset(){
         board.reset();
+        this.lives = MAX_LIVES;
     }
 
     public boolean hasErrors(){
@@ -48,6 +52,20 @@ public class BoardService {
 
     public boolean clearCell(int row, int col) {
         return board.clearValue(col, row);
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void loseLife() {
+        if (lives > 0) {
+            lives--;
+        }
+    }
+
+    public boolean hasLives() {
+        return lives > 0;
     }
 
     private List<List<Space>> initBoard(final Map<String, String> gameConfig) {
