@@ -44,7 +44,7 @@ public class Main {
             System.out.println("7 - Finalizar jogo");
             System.out.println("8 - Sair");
 
-            option = scanner.nextInt();
+            option = readMenuOption();
 
             switch (option){
                 case 1 -> startGame(positions);
@@ -60,6 +60,21 @@ public class Main {
         }
     }
 
+    private static int readMenuOption() {
+        while (true) {
+            var line = scanner.nextLine().trim();
+            if (line.isEmpty()) {
+                System.out.println("Entrada invalida! Digite apenas o numero da opcao desejada.");
+                continue;
+            }
+            try {
+                return Integer.parseInt(line);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada invalida! Digite apenas o numero da opcao desejada.");
+            }
+        }
+    }
+
     private static Map<String, String> generateRandomPuzzle(int filledCells) {
         SudokuGenerator generator = new SudokuGenerator();
         int[][] puzzle = generator.createPuzzle(filledCells);
@@ -67,7 +82,7 @@ public class Main {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 if (puzzle[i][j] != 0) {
-                    config.put(String.format("%d,%d", j, i), String.format("%d,true", puzzle[i][j]));
+                    config.put(String.format("%d,%d", i, j), String.format("%d,true", puzzle[i][j]));
                 }
             }
         }
@@ -200,11 +215,22 @@ public class Main {
 
 
     private static int runUntilGetValidNumber(final int min, final int max){
-        var current = scanner.nextInt();
-        while (current < min || current > max){
-            System.out.printf("Informe um numero entre %s e %s\n", min, max);
-            current = scanner.nextInt();
+        while (true) {
+            var line = scanner.nextLine().trim();
+            if (line.isEmpty()) {
+                System.out.printf("Informe um numero entre %s e %s\n", min, max);
+                continue;
+            }
+            try {
+                var current = Integer.parseInt(line);
+                if (current < min || current > max) {
+                    System.out.printf("Informe um numero entre %s e %s\n", min, max);
+                    continue;
+                }
+                return current;
+            } catch (NumberFormatException e) {
+                System.out.printf("Entrada invalida! Informe um numero entre %s e %s\n", min, max);
+            }
         }
-        return current;
     }
 }
