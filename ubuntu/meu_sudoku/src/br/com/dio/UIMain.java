@@ -28,7 +28,7 @@ public class UIMain {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 if (puzzle[i][j] != 0) {
-                    config.put(String.format("%d,%d", j, i), String.format("%d,true", puzzle[i][j]));
+                    config.put(String.format("%d,%d", i, j), String.format("%d,true", puzzle[i][j]));
                 }
             }
         }

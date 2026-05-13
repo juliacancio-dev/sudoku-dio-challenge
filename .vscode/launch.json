@@ -9,14 +9,16 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "br.com.dio.Main",
-            "projectName": "sudoku-dio-challenge_f2e95d97"
+            "projectName": "sudoku-dio-challenge_f2e95d97",
+            "cwd": "${workspaceFolder}/ubuntu/meu_sudoku"
         },
         {
             "type": "java",
             "name": "UIMain",
             "request": "launch",
             "mainClass": "br.com.dio.UIMain",
-            "projectName": "sudoku-dio-challenge_f2e95d97"
+            "projectName": "sudoku-dio-challenge_f2e95d97",
+            "cwd": "${workspaceFolder}/ubuntu/meu_sudoku"
         },
         {
             "type": "java",

@@ -55,7 +55,7 @@ public class BoardService {
         for (int col = 0; col < BOARD_LIMIT; col++) {
             spaces.add(new ArrayList<>());
             for (int row = 0; row < BOARD_LIMIT; row++) {
-                var positionConfig = gameConfig.get("%s,%s".formatted(col, row));
+                var positionConfig = gameConfig.get("%s,%s".formatted(row, col));
                 if (positionConfig == null || positionConfig.trim().isEmpty()) {
                     positionConfig = "0,false";
                 }
