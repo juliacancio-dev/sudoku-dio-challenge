@@ -50,7 +50,7 @@ public class NumberText extends JTextField implements EventListener {
         this.setDocument(new NumberTextLimit());
         this.setBackground(COLOR_NORMAL);
         this.setEnabled(!space.isFixed());
-        if (space.isFixed()){
+        if (space.isFixed() && space.getActual() != null){
             this.setText(space.getActual().toString());
             this.setFont(new Font("Arial", Font.BOLD, 24));
             this.setForeground(COLOR_INITIAL_STRONG);
@@ -167,3 +167,4 @@ public class NumberText extends JTextField implements EventListener {
         }
     }
 }
+
